@@ -5,9 +5,10 @@ const addresses = document.getElementById('addresses');
 async function loadAddresses() {
     // mock
     const locations = await fetchLocations();
+    const opened = locationOpened();
 
     // markup
-    const markup = addressMarkup();
+    const markup = addressMarkup(opened);
     const template = Handlebars.compile(markup);
 
     // render
@@ -29,7 +30,7 @@ function formatTime(date) {
     return `${hours}:${minutes} ${ampm}`;
 }
 
-function addressMarkup() {
+function addressMarkup(locationOpened) {
     return `<div class="location-item p-2 my-3 border border-secondary" data-lat="{{latitude}}" data-lng="{{longitude}}">
                 <!-- Name -->
                 <h6>{{name}}</h6>
@@ -41,10 +42,10 @@ function addressMarkup() {
                 </p>
         
                 <!-- Open until -->
-                {{#if monday_open}}
-                    <p class="text-success">Open today until {{ monday_open }}</p>
+                {{#if ${locationOpened} }}
+                    <p class="text-success">Open today until {{ ${locationOpened} }}</p>
                 {{else}}
-                    <p class="text-secondary">CLOSED - opens at {{ monday_open }}</p>
+                    <p class="text-secondary">CLOSED</p>
                 {{/if}}
 
                 <!-- Phone -->
@@ -66,4 +67,12 @@ function addressMarkup() {
                     </button>
                 </div>
             </div>`;
+}
+
+// is location opened today?
+function locationOpened() {
+    const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+    const currentDay = (new Date()).getDay();
+
+    return `${days[currentDay]}_open`;
 }
