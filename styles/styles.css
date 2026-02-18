@@ -3,3 +3,9 @@
     width: 600px;
     height: 400px;
 }
+
+#addresses {
+    height: 400px; /* similar to map height */
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
