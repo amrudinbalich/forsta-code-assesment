@@ -62,7 +62,7 @@ function addressMarkup(locationOpened) {
                         DIRECTIONS
                     </button>
         
-                    <button class="btn btn-sm btn-outline-dark px-4">
+                    <button class="btn btn-sm btn-outline-dark px-4" onclick="openPopup('location_{{id}}')">
                         MORE INFO
                     </button>
                 </div>
