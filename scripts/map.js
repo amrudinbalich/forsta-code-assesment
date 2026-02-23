@@ -1,4 +1,5 @@
 const mapDiv = document.getElementById("map");
+const addresses = document.getElementById('addresses');
 
 // map states
 const markerIds = {};
@@ -23,6 +24,9 @@ async function fetchLocations() {
 
 // main callback
 async function initMap() {
+    // initialize services
+    const addressesService = new AddressesService();
+
     const locations = await fetchLocations(); // mock locations
     locationsList = locations;
 
@@ -36,6 +40,7 @@ async function initMap() {
     globalMap = map;
 
     loadMarkers(map, locations);
+    addressesService.load(locations);
 
     directionsService = new google.maps.DirectionsService();
     directionsRenderer = new google.maps.DirectionsRenderer({ map });

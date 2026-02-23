@@ -4,22 +4,15 @@ class AddressesService {
      * @returns {void}
      */
     async load(locations) {
-        // mock
-        // const locations = await fetchLocations();
-        const opened = this.locationOpened();
-    
-        // markup
-        const markup = this.addressMarkup(opened);
+        // prepare address markup
+        const markup = this.addressMarkup(this.locationOpened());
         const template = Handlebars.compile(markup);
 
-        // todo: load the user coords
         userCoords = { lat: 41.0938, lng: -85.0707 }; // for now
         const renderList = userCoords ? this.sortLocationsByDistance(locations) : locations;
-    
+
         // render
-        renderList.forEach(location => {
-            addresses.innerHTML += template(location);
-        });
+        renderList.forEach(location => addresses.innerHTML += template(location));
     }
 
     /**
