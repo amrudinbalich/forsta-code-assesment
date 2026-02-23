@@ -11,10 +11,40 @@ async function loadAddresses() {
     const markup = addressMarkup(opened);
     const template = Handlebars.compile(markup);
 
+    userCoords = nativeCoords; // DEV only
+    const renderList = userCoords ? sortLocationsByDistance(locations) : locations;
+
     // render
-    locations.forEach(location => {
+    renderList.forEach(location => {
         addresses.innerHTML += template(location);
     });
+}
+
+function sortLocationsByDistance(locations) {
+
+    // check for api presence
+    // sometimes api will not be loaded
+    if (!window.google?.maps?.geometry?.spherical) {
+        console.warn('Google Maps library not loaded yet.');
+        return locations;
+    }
+
+    return locations
+        .map(location => {
+            
+            const meters = google.maps.geometry.spherical.computeDistanceBetween(
+                new google.maps.LatLng(userCoords.lat, userCoords.lng),
+                new google.maps.LatLng(
+                    parseFloat(location.latitude),
+                    parseFloat(location.longitude)
+                )
+            );
+
+            const miles = meters / 1609.344;
+
+            return { ...location, distanceMiles: miles.toFixed(1) };
+        })
+        .sort((a, b) => a.distanceMiles - b.distanceMiles);
 }
 
 
@@ -33,7 +63,11 @@ function formatTime(date) {
 function addressMarkup(locationOpened) {
     return `<div class="location-item p-2 my-3 border border-secondary" data-lat="{{latitude}}" data-lng="{{longitude}}">
                 <!-- Name -->
-                <h6>{{name}}</h6>
+                {{#if distanceMiles}} 
+                    <h6 class="d-flex justify-content-between">{{name}} <p class="text-secondary">{{distanceMiles}} mi away</p> </h6>
+                {{else}}
+                    <h6>{{name}}</h6>
+                {{/if}}
         
                 <!-- Address -->
                 <p>
@@ -58,7 +92,7 @@ function addressMarkup(locationOpened) {
         
                 <!-- Action buttons -->
                 <div class="d-flex justify-content-start gap-4 mt-2">
-                    <button class="btn btn-sm btn-dark px-4">
+                    <button class="btn btn-sm btn-dark px-4" onclick="RouteService.getDirections({lat: parseFloat('{{latitude}}'), lng: parseFloat('{{longitude}}') })">
                         DIRECTIONS
                     </button>
         

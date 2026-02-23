@@ -4,7 +4,12 @@ const mapDiv = document.getElementById("map");
 const markerIds = {};
 let globalMap = null;
 let locationsList = [];
-let openInfoWindow = null;
+let activeInfoWindow = null;
+
+let directionsService, directionsRenderer;
+let userCoords;
+
+const nativeCoords = { lat: 41.0938, lng: -85.0707 }; // Fort Wayne center
 
 async function fetchLocations() {
     try {
@@ -22,16 +27,18 @@ async function initMap() {
     locationsList = locations;
 
     const options = {
-        center: { lat: 41.0938, lng: -85.0707 }, // Fort Wayne center
-        zoom:12,
+        center: nativeCoords,
+        zoom:5,
     };
 
     // init map
     const map = new google.maps.Map(mapDiv, options);
     globalMap = map;
 
-    // load
     loadMarkers(map, locations);
+
+    directionsService = new google.maps.DirectionsService();
+    directionsRenderer = new google.maps.DirectionsRenderer({ map });
 }
 
 function loadMarkers(map, locations) {
@@ -41,22 +48,22 @@ function loadMarkers(map, locations) {
     locations.forEach(location => {
         const lat = parseFloat(location.latitude);
         const lng = parseFloat(location.longitude);
-
+    
         const marker = new google.maps.Marker({
             map,
             position: { lat, lng },
             title: location.name
         });
-
+    
         // remember
         const markerId = `location_${location.id}`;
         markerIds[markerId] = marker;
-
+    
         registerPopup(markerId);
-
+    
         // open popup
         marker.addListener('click', () => openPopup(markerId));
-
+    
         // extend map bounds
         bounds.extend(marker.getPosition());
     });
@@ -90,10 +97,11 @@ function openPopup(locationId) {
     if(!marker) {
         return;
     }
+
+    activeInfoWindow?.close();
     
     infoWindow.open(globalMap, marker);
     globalMap.panTo(marker.getPosition());
 
-    openInfoWindow = infoWindow;
+    activeInfoWindow = infoWindow;
 }
-

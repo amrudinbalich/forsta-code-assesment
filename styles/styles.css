@@ -1,11 +1,9 @@
 /* CUSTOM STYLES HERE */
-#map {
-    width: 600px;
-    height: 400px;
+#map, #addresses {
+    height: 600px;
 }
 
 #addresses {
-    height: 400px; /* similar to map height */
     overflow-x: hidden;
     overflow-y: scroll;
 }
