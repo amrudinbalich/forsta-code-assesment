@@ -9,6 +9,8 @@ let activeInfoWindow = null;
 let directionsService, directionsRenderer;
 let userCoords;
 
+const nativeCoords = { lat: 41.0938, lng: -85.0707 }; // Fort Wayne center
+
 async function fetchLocations() {
     try {
         const response = await fetch('mock_locations.json');
@@ -25,8 +27,8 @@ async function initMap() {
     locationsList = locations;
 
     const options = {
-        center: { lat: 41.0938, lng: -85.0707 }, // Fort Wayne center
-        zoom:12,
+        center: nativeCoords,
+        zoom:5,
     };
 
     // init map

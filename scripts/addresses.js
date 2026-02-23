@@ -11,7 +11,7 @@ async function loadAddresses() {
     const markup = addressMarkup(opened);
     const template = Handlebars.compile(markup);
 
-    userCoords = { lat: 41.0938, lng: -85.0707 }; // for now
+    userCoords = nativeCoords; // DEV only
     const renderList = userCoords ? sortLocationsByDistance(locations) : locations;
 
     // render
@@ -22,8 +22,10 @@ async function loadAddresses() {
 
 function sortLocationsByDistance(locations) {
 
-    if(!google && !google.maps.geometry.spherical) {
-        console.warn('There was a problem loading the library. Please try again later.');
+    // check for api presence
+    // sometimes api will not be loaded
+    if (!window.google?.maps?.geometry?.spherical) {
+        console.warn('Google Maps library not loaded yet.');
         return locations;
     }
 
@@ -90,7 +92,7 @@ function addressMarkup(locationOpened) {
         
                 <!-- Action buttons -->
                 <div class="d-flex justify-content-start gap-4 mt-2">
-                    <button class="btn btn-sm btn-dark px-4" onclick="getDirections({lat: parseFloat('{{latitude}}'), lng: parseFloat('{{longitude}}') })">
+                    <button class="btn btn-sm btn-dark px-4" onclick="RouteService.getDirections({lat: parseFloat('{{latitude}}'), lng: parseFloat('{{longitude}}') })">
                         DIRECTIONS
                     </button>
         
