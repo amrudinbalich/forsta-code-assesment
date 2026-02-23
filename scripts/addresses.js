@@ -22,6 +22,11 @@ async function loadAddresses() {
 
 function sortLocationsByDistance(locations) {
 
+    if(!google && !google.maps.geometry.spherical) {
+        console.warn('There was a problem loading the library. Please try again later.');
+        return locations;
+    }
+
     return locations
         .map(location => {
             
