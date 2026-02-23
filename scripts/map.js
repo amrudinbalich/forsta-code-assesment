@@ -1,5 +1,11 @@
 const mapDiv = document.getElementById("map");
 
+// map states
+const markerIds = {};
+let globalMap = null;
+let locationsList = [];
+let openInfoWindow = null;
+
 async function fetchLocations() {
     try {
         const response = await fetch('mock_locations.json');
@@ -13,6 +19,7 @@ async function fetchLocations() {
 // main callback
 async function initMap() {
     const locations = await fetchLocations(); // mock locations
+    locationsList = locations;
 
     const options = {
         center: { lat: 41.0938, lng: -85.0707 }, // Fort Wayne center
@@ -21,6 +28,7 @@ async function initMap() {
 
     // init map
     const map = new google.maps.Map(mapDiv, options);
+    globalMap = map;
 
     // load
     loadMarkers(map, locations);
@@ -28,7 +36,6 @@ async function initMap() {
 
 function loadMarkers(map, locations) {
     const bounds = new google.maps.LatLngBounds();
-    let openInfoWindow = null;
 
     // set markers
     locations.forEach(location => {
@@ -41,31 +48,14 @@ function loadMarkers(map, locations) {
             title: location.name
         });
 
-        // info window
-        const infowindow = new google.maps.InfoWindow({
-            content: `
-                <div>
-                    <strong>${location.name}</strong><br>
-                    ${location.address}<br>
-                    ${location.city}, ${location.state}
-                </div>
-            `,
-            ariaLabel: location.name,
-            maxWidth: 260
-        });
+        // remember
+        const markerId = `location_${location.id}`;
+        markerIds[markerId] = marker;
 
-        // open on click
-        marker.addListener('click', () => {
-            // hide
-            if(openInfoWindow) {
-                openInfoWindow.close();
-            }
+        registerPopup(markerId);
 
-            // open & remember
-            infowindow.open(map, marker);
-            map.panTo(marker.getPosition());
-            openInfoWindow = infowindow;
-        });
+        // open popup
+        marker.addListener('click', () => openPopup(markerId));
 
         // extend map bounds
         bounds.extend(marker.getPosition());
@@ -74,3 +64,36 @@ function loadMarkers(map, locations) {
     // center the map around locations
     map.fitBounds(bounds);
 }
+
+function registerPopup(locationId) {
+    // get active location details for popup
+    const numericId = parseInt(locationId.replace('location_', ''), 10)
+    const activeLocation = locationsList.find(location => location.id === numericId);
+
+    return new google.maps.InfoWindow({
+        content: `
+            <div>
+                <strong>${activeLocation.name}</strong><br>
+                ${activeLocation.address}<br>
+                ${activeLocation.city}, ${activeLocation.state}
+            </div>
+        `,
+        ariaLabel: activeLocation.name,
+        maxWidth: 260
+    });
+}
+
+function openPopup(locationId) {
+    const infoWindow = registerPopup(locationId);
+    const marker = markerIds[locationId] ?? null;
+
+    if(!marker) {
+        return;
+    }
+    
+    infoWindow.open(globalMap, marker);
+    globalMap.panTo(marker.getPosition());
+
+    openInfoWindow = infoWindow;
+}
+
