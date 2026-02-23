@@ -4,7 +4,10 @@ const mapDiv = document.getElementById("map");
 const markerIds = {};
 let globalMap = null;
 let locationsList = [];
-let openInfoWindow = null;
+let activeInfoWindow = null;
+
+let directionsService, directionsRenderer;
+let userCoords;
 
 async function fetchLocations() {
     try {
@@ -30,8 +33,10 @@ async function initMap() {
     const map = new google.maps.Map(mapDiv, options);
     globalMap = map;
 
-    // load
     loadMarkers(map, locations);
+
+    directionsService = new google.maps.DirectionsService();
+    directionsRenderer = new google.maps.DirectionsRenderer({ map });
 }
 
 function loadMarkers(map, locations) {
@@ -41,22 +46,22 @@ function loadMarkers(map, locations) {
     locations.forEach(location => {
         const lat = parseFloat(location.latitude);
         const lng = parseFloat(location.longitude);
-
+    
         const marker = new google.maps.Marker({
             map,
             position: { lat, lng },
             title: location.name
         });
-
+    
         // remember
         const markerId = `location_${location.id}`;
         markerIds[markerId] = marker;
-
+    
         registerPopup(markerId);
-
+    
         // open popup
         marker.addListener('click', () => openPopup(markerId));
-
+    
         // extend map bounds
         bounds.extend(marker.getPosition());
     });
@@ -90,10 +95,64 @@ function openPopup(locationId) {
     if(!marker) {
         return;
     }
+
+    activeInfoWindow?.close();
     
     infoWindow.open(globalMap, marker);
     globalMap.panTo(marker.getPosition());
 
-    openInfoWindow = infoWindow;
+    activeInfoWindow = infoWindow;
 }
 
+// DIRECTIONS
+async function getDirections(destination) {
+
+    try {
+        const origin = userCoords ?? await getUserLocation();
+
+        directionsService.route(
+            {
+                origin,
+                destination,
+                travelMode: google.maps.TravelMode.DRIVING
+            },
+            (result, status) => {
+
+                // success
+                if (status === 'OK') {
+                    directionsRenderer.setDirections(result);
+                    return;
+                }
+
+                // eg. usr is accross the ocean, physically really far
+                if (status === 'ZERO_RESULTS') {
+                    alert('Could not find route to desination.');
+                    return;
+                }
+
+                // some other error happened
+                alert('Directions service failed. Please try again later.');
+
+            }
+        );
+
+    } catch (error) {
+        console.error(error);
+        alert("Could not get your location.");
+    }
+
+}
+
+async function getUserLocation() {
+    return new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                resolve({
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                });
+            },
+            (error) => reject(error)
+        );
+    });
+}

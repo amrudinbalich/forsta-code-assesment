@@ -19,7 +19,7 @@
         <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 
         <!-- google maps -->
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh3U0gPmzNNwefWvxNgtBjtqhj67XKbb4&callback=initMap&libraries=maps,marker&loading=async" defer></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh3U0gPmzNNwefWvxNgtBjtqhj67XKbb4&callback=initMap&libraries=maps,marker,geometry&loading=async" defer async></script>
 
         <!-- page assets -->
         <link rel="stylesheet" href="styles/styles.css">
@@ -27,19 +27,30 @@
 
     <body>
 
-        <div class="container">
-            <main class="row mt-5">
-                
-                <div class="row">
-                    <div id="addresses" class="col-md-4 pe-3 border border-secondary"><!-- addresses --></div>
-                    <div id="map" class="col-md-8"><!-- map --></div>
-                </div>
-        
-            </main>    
+        <div class="container mt-5">
+
+            <!-- Map and Addresses Layout -->
+            <main class="row">
+                <div id="addresses" class="col-md-5 d-md-pe-3 border border-secondary"></div>
+                <div id="map" class="col-md-7"></div>
+            </main>
+
         </div>
 
         <script type="text/javascript" src="scripts/map.js"></script>
         <script type="text/javascript" src="scripts/addresses.js"></script>
+
+        <script>
+            /** custom page script **/
+
+            // tooltip
+            document.addEventListener('DOMContentLoaded', function () {
+                const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+                tooltipTriggerList.forEach(el => {
+                    new bootstrap.Tooltip(el);
+                });
+            });
+        </script>
 
     </body>
 </html>
