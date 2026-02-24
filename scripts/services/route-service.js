@@ -1,18 +1,36 @@
 class RouteService {
+
+    /**
+     * @type {google.maps.DirectionsService}
+     */
+    directionsService;
+
+    /**
+     * @type {google.maps.DirectionsRenderer}
+     */
+    directionsRenderer;
+
+    /**
+     * @param {MapService} mapService 
+     */
+    constructor(directionsService, directionsRenderer) {
+        this.directionsService = directionsService;
+        this.directionsRenderer = directionsRenderer
+    }
+
     /**
      * Get routes from point A (users locaiton) to point B (truck location).
      *
      * @param {{ lat: number, lng: number }} destination - Target location coordinates.
      * @returns {Promise<void>}
      */
-    static async getDirections(destination) {
-
+    async getDirections(destination) {
+        
         try {
-            const origin = userCoords ?? await UserLocation.getUserLocation();
     
-            directionsService.route(
+            this.directionsService.route(
                 {
-                    origin,
+                    origin: { lat: 41.0938, lng: -85.0707 },
                     destination,
                     travelMode: google.maps.TravelMode.DRIVING
                 },
@@ -20,7 +38,7 @@ class RouteService {
     
                     // success
                     if (status === 'OK') {
-                        directionsRenderer.setDirections(result);
+                        this.directionsRenderer.setDirections(result);
                         return;
                     }
     

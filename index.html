@@ -22,7 +22,7 @@
         <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 
         <!-- google maps -->
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh3U0gPmzNNwefWvxNgtBjtqhj67XKbb4&callback=initMap&libraries=maps,marker,geometry&loading=async" defer async></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh3U0gPmzNNwefWvxNgtBjtqhj67XKbb4&callback=initApplication&libraries=maps,marker,geometry&loading=async" defer async></script>
 
         <!-- page assets -->
         <link rel="stylesheet" href="styles/styles.css">
@@ -40,21 +40,17 @@
 
         </div>
 
-        <!-- page scripts -->
+        <!-- page asset scripts -->
         <script type="text/javascript" src="scripts/services/route-service.js"></script>
         <script type="text/javascript" src="scripts/services/addresses-service.js"></script>
-        <script type="text/javascript" src="scripts/map.js"></script>
+        <script type="text/javascript" src="scripts/services/map-service.js"></script>
 
         <script>
-            /** custom page script **/
-
-            // tooltip
-            document.addEventListener('DOMContentLoaded', function () {
-                const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-                tooltipTriggerList.forEach(el => {
-                    new bootstrap.Tooltip(el);
-                });
-            });
+            // initialize the application
+            async function initApplication() {
+                const map = new MapService();
+                await map.initialize();
+            }
         </script>
 
     </body>

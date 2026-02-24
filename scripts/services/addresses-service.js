@@ -1,4 +1,7 @@
 class AddressesService {
+
+    userCoords = { lat: 41.0938, lng: -85.0707 }; // DEV test
+
     /**
      * Load Addresses on a page.
      * @returns {void}
@@ -8,8 +11,7 @@ class AddressesService {
         const markup = this.addressMarkup(this.locationOpened());
         const template = Handlebars.compile(markup);
 
-        userCoords = { lat: 41.0938, lng: -85.0707 }; // for now
-        const renderList = userCoords ? this.sortLocationsByDistance(locations) : locations;
+        const renderList = this.userCoords ? this.sortLocationsByDistance(locations) : locations;
 
         // render
         renderList.forEach(location => addresses.innerHTML += template(location));
@@ -22,6 +24,7 @@ class AddressesService {
      * @returns 
      */
     addressMarkup(locationOpened) {
+
         return `<div class="location-item p-2 my-3 border border-secondary" data-lat="{{latitude}}" data-lng="{{longitude}}">
                     <!-- Name -->
                     {{#if distanceMiles}} 
@@ -53,11 +56,20 @@ class AddressesService {
             
                     <!-- Action buttons -->
                     <div class="d-flex justify-content-start gap-4 mt-2">
-                        <button class="btn btn-sm btn-dark px-4" onclick="RouteService.getDirections({lat: parseFloat('{{latitude}}'), lng: parseFloat('{{longitude}}') })">
+                        <button 
+                            id="direction-btn-{{id}}" 
+                            class="btn btn-sm btn-dark px-4 directions-btn" 
+                            data-lat="{{latitude}}" 
+                            data-lng="{{longitude}}"
+                        >
                             DIRECTIONS
                         </button>
             
-                        <button class="btn btn-sm btn-outline-dark px-4" onclick="openPopup('location_{{id}}')">
+                        <button 
+                            id="info-btn-{{id}}" 
+                            class="btn btn-sm btn-outline-dark px-4 open-info-btn" 
+                            data-id="location_{{id}}"
+                        >
                             MORE INFO
                         </button>
                     </div>
@@ -96,7 +108,7 @@ class AddressesService {
             .map(location => {
                 
                 const meters = google.maps.geometry.spherical.computeDistanceBetween(
-                    new google.maps.LatLng(userCoords.lat, userCoords.lng),
+                    new google.maps.LatLng(this.userCoords.lat, this.userCoords.lng),
                     new google.maps.LatLng(
                         parseFloat(location.latitude),
                         parseFloat(location.longitude)
