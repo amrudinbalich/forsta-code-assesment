@@ -3,7 +3,7 @@ class MapService {
     /**
      * @type {HTMLDivElement}
      */
-    mapDiv = document.getElementById("map");
+    mapDiv;
 
     /**
      * @type {AddressesService}
@@ -56,30 +56,6 @@ class MapService {
         this.loadMarkers();
         this.addressesService.load(this.locations); // addresses
 
-        document.addEventListener('click', async (e) => {
-
-            // DIRECTIONS
-            const directionBtn = e.target.closest('.directions-btn');
-            if (directionBtn) {
-                const lat = parseFloat(directionBtn.dataset.lat);
-                const lng = parseFloat(directionBtn.dataset.lng);
-        
-                await this.routeService.getDirections({ lat, lng });
-                return;
-            }
-        
-            // INFO
-            const infoBtn = e.target.closest('.open-info-btn');
-            if (infoBtn) {
-                const locationId = infoBtn.dataset.id;
-
-                this.openPopup(locationId);
-                return;
-            }
-        
-        });
-
-
     }
 
     async fetchLocations() {
@@ -101,6 +77,8 @@ class MapService {
             center: this.nativeCoords,
             zoom:5,
         };
+
+        this.mapDiv = document.getElementById("map");
     
         return new google.maps.Map(this.mapDiv, options);
     }
