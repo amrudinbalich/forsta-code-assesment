@@ -5,6 +5,9 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
+        <!-- favicon -->
+        <link rel="icon" href="assets/rioseo-logo-mobile.png" type="image/x-icon">
+
         <!-- bootstrap 5 CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous" defer></script>
@@ -19,7 +22,7 @@
         <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 
         <!-- google maps -->
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh3U0gPmzNNwefWvxNgtBjtqhj67XKbb4&callback=initMap&libraries=maps,marker,geometry&loading=async" defer async></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh3U0gPmzNNwefWvxNgtBjtqhj67XKbb4&callback=initApplication&libraries=maps,marker,geometry&loading=async" defer async></script>
 
         <!-- page assets -->
         <link rel="stylesheet" href="styles/styles.css">
@@ -37,21 +40,17 @@
 
         </div>
 
-        <!-- page scripts -->
+        <!-- page asset scripts -->
         <script type="text/javascript" src="scripts/services/route-service.js"></script>
-        <script type="text/javascript" src="scripts/map.js"></script>
-        <script type="text/javascript" src="scripts/addresses.js"></script>
+        <script type="text/javascript" src="scripts/services/addresses-service.js"></script>
+        <script type="text/javascript" src="scripts/services/map-service.js"></script>
 
         <script>
-            /** custom page script **/
-
-            // tooltip
-            document.addEventListener('DOMContentLoaded', function () {
-                const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-                tooltipTriggerList.forEach(el => {
-                    new bootstrap.Tooltip(el);
-                });
-            });
+            // initialize the application
+            async function initApplication() {
+                const map = new MapService();
+                await map.initialize();
+            }
         </script>
 
     </body>
