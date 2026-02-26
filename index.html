@@ -5,31 +5,126 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
+        <!-- favicon -->
+        <link rel="icon" href="assets/rioseo-logo-mobile.png" type="image/x-icon">
+
         <!-- bootstrap 5 CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-        
-        <!-- font awesome icons  -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
-        
-        <!-- jQuery -->
-        <script src="https://code.jquery.com/jquery-4.0.0.min.js" integrity="sha256-OaVG6prZf4v69dPg6PhVattBXkcOWQB62pdZ3ORyrao=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous" defer></script>
         
         <!-- Handlebars JS Lib -->
         <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 
+        <!-- google maps -->
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh3U0gPmzNNwefWvxNgtBjtqhj67XKbb4&callback=initApplication&libraries=maps,marker,geometry&loading=async" defer async></script>
+
         <!-- page assets -->
-        <script type="text/javascript" src="scripts/scripts.js"></script>
         <link rel="stylesheet" href="styles/styles.css">
     </head>
 
     <body>
 
-        <!-- DEMO -->
-        <div class="map-wrap">
-            <img class="map">
+        <div class="container mt-md-5 d-flex flex-column vh-100">
+
+            <header class="container-fluid border-bottom mb-md-4">
+                <div class="container">
+                    <nav class="navbar navbar-expand-md navbar-light py-3">
+            
+                        <!-- Mobile Toggler (left) -->
+                        <button class="navbar-toggler border-0 order-1" type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#mainNavbar"
+                                aria-controls="mainNavbar"
+                                aria-expanded="false"
+                                aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+            
+                        <!-- Center Logo -->
+                        <a class="navbar-brand mx-auto order-2 text-center" href="#">
+                            <!-- Desktop Logo -->
+                            <img src="assets/rioseo-logo.png"
+                                 alt="Taco Truck Co."
+                                 class="img-fluid d-none d-md-block"
+                                 style="max-height: 50px;">
+            
+                            <!-- Mobile Logo -->
+                            <img src="assets/rioseo-logo-mobile.png"
+                                 alt="Taco Truck Co."
+                                 class="img-fluid d-md-none"
+                                 style="max-height: 40px;">
+                        </a>
+            
+                        <!-- Right Side Locations Image (mobile visible) -->
+                        <div class="order-3 d-md-none">
+                            <a href="#">
+                                <img src="assets/location-icon.png"
+                                     alt="Locations"
+                                     style="height: 28px;">
+                            </a>
+                        </div>
+            
+                        <!-- Collapsible Menu -->
+                        <div class="collapse navbar-collapse order-md-3" id="mainNavbar">
+                            <ul class="navbar-nav ms-auto text-center text-md-start">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Menu</a>
+                                </li>
+                                <li class="nav-item d-none d-md-block">
+                                    <a class="nav-link" href="#">Track Locator</a>
+                                </li>
+                            </ul>
+                        </div>
+            
+                    </nav>
+                </div>
+            </header>
+
+            <!-- N of around locations -->
+            <div class="row d-none d-md-block">
+                <h3 id="locations-around" class="text-secondary-emphasis">Locations Around You</h3>
+            </div>
+
+            <!-- Map and Addresses Layout -->
+            <main class="row flex-grow-1 overflow-hidden" style="min-height:0;">
+                <div id="addresses" class="col-md-6 d-md-pe-3 border border-secondary d-md-block h-100 overflow-auto">
+                    <!-- Address list -->
+                </div>
+
+                <div id="map" class="col-md-6 d-none d-md-block h-100">
+                    <!-- Map -->
+                </div>
+            </main>
+
+            <!-- Toggle buttons - only visible on mobile -->
+            <div class="d-flex d-md-none my-3">
+                <button id="showAddresses" class="btn btn-dark flex-fill me-2">
+                    Addresses
+                </button>
+                <button id="showMap" class="btn btn-outline-dark flex-fill">
+                    Locations
+                </button>
+            </div>
+
         </div>
 
-        <!-- boostrap 5 JS -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+        <!-- page asset scripts -->
+        <script type="text/javascript" src="scripts/services/route-service.js"></script>
+        <script type="text/javascript" src="scripts/services/addresses-service.js"></script>
+        <script type="text/javascript" src="scripts/services/map-service.js"></script>
+        <script type="text/javascript" src="scripts/page-script.js"></script>
+
+        <script>
+            window.mapService = null;
+
+            // initialize the application
+            async function initApplication() {
+                window.mapService = new MapService();
+                await window.mapService.initialize();
+
+                registerPageScript(); // register page button scripts
+            }
+        </script>
+
     </body>
 </html>
