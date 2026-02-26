@@ -69,6 +69,15 @@ class MapService {
     }
 
     /**
+     * Call directions service.
+     * @param {lat, lng} destination 
+     */
+    async useDirections(destination) {
+        this.activeInfoWindow.close();
+        await this.routeService.getDirections(destination);
+    }
+
+    /**
      * Initialize the google map.
      * @returns {void}
      */
@@ -120,6 +129,9 @@ class MapService {
     }
 
     openPopup(markerId) {
+        // remove any active directions
+        this.routeService.directionsRenderer.setDirections({ routes: [] });
+
         const infoWindow = this.registerPopup(markerId);
         const marker = this.markerIds[markerId] ?? null;
     

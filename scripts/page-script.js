@@ -41,7 +41,7 @@ function listButtonListeners() {
             const lat = parseFloat(e.target.dataset.lat);
             const lng = parseFloat(e.target.dataset.lng);
 
-            await window.mapService.routeService.getDirections({ lat, lng });
+            window.mapService.useDirections({ lat, lng });
             
             if (window.innerWidth < 768) {
                 toggleView('map');
