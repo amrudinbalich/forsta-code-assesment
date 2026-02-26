@@ -83,7 +83,7 @@ class AddressesService {
      */
     locationOpened() {
         const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
-        const currentDay = (new Date()).getDay();
+        const currentDay = (new Date()).getDay() - 1;
     
         return `${days[currentDay]}_open`;
     }

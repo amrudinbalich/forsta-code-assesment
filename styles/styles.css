@@ -14,3 +14,13 @@
         max-height: 600px;
     }
 }
+
+.active-link {
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.active-link:hover {
+    color: #ffc107;
+    text-decoration: underline;
+}

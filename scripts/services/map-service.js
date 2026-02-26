@@ -152,17 +152,60 @@ class MapService {
         const numericId = parseInt(markerId.replace('location_', ''), 10)
         const activeLocation = this.locations.find(location => location.id === numericId);
 
+        const openDays = this.#openDays(activeLocation);
+
         return new google.maps.InfoWindow({
             content: `
-                <div>
-                    <strong>${activeLocation.name}</strong><br>
-                    ${activeLocation.address}<br>
-                    ${activeLocation.city}, ${activeLocation.state}
+                <div class="info-window p-3">
+
+                    <h6 class="mb-2">${activeLocation.name}</h6>
+                    <p class="mb-1">${activeLocation.address}</p>
+                    <p class="mb-0 text-muted">${activeLocation.city}, ${activeLocation.state}</p>
+
+                    <div class="mt-3">
+                        <h6 class="mb-2">Opening Hours</h6>
+                        ${openDays}
+                    </div>
+
+                    <div class="mt-3">
+                        <p class="text-warning active-link" onclick="window.mapService.useDirections({ lat: ${activeLocation.latitude}, lng: ${activeLocation.longitude} })"><img src="assets/direction-icon.png" /> Get Directions</p>
+                        <a href="tel:${activeLocation.phone}" class="text-warning d-inline-flex align-items-center active-link">
+                            <img src="assets/phone-icon.png" class="me-1" /> ${activeLocation.phone}
+                        </a>
+                    </div>
+
                 </div>
             `,
             ariaLabel: activeLocation.name,
-            maxWidth: 260
+            maxWidth: 600
         });
+    }
+
+    #openDays(activeLocation) {
+        const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+        const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+        const currentDayIndex = (new Date()).getDay() - 1;
+
+        let hoursHtml = '<ul class="list-unstyled mb-0">';
+        days.forEach((day, i) => {
+            const open = activeLocation[`${day}_open`];
+            const close = activeLocation[`${day}_close`];
+            const display = (open.toLowerCase() === "closed") ? "Closed" : `${open} - ${close}`;
+
+            let bold = '';
+            if(i === currentDayIndex) {
+                bold = 'fw-bold';
+            }
+            
+            hoursHtml += `<li class="d-flex justify-content-between ${bold} gap-2">
+                            <span>${dayNames[i]}</span>
+                            <span>${display}</span>
+                        </li>`;
+        });
+        hoursHtml += '</ul>';
+
+        return hoursHtml;
     }
 
 }
