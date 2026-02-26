@@ -1,21 +1,3 @@
-# 📍 Forsta Code Assessment
-
-## 📑 Table of Contents
-
-| Section | Description |
-|----------|-------------|
-| [Introduction](#introduction) | Developer notes and overall concept |
-| [Setup](#setup) | Project installation instructions |
-| [Mockup Data](#mockup-data) | API restrictions & local mock solution |
-| [HTML Skeleton](#html-skeleton) | Structure and normalization |
-| [Page Scripts](#page-scripts) | JavaScript architecture overview |
-| [JS Code Architecture](#js-code-architecture) | OOP structure explanation |
-| [Mobile View](#mobile-view) | Mobile-first implementation |
-| [UI Organization](#organizing-ui) | Styling & layout decisions |
-| [Mobile Design](#mobile-design) | Styling & layout decisions |
-
----
-
 ## Introduction
 
 ### Developer's Word & Setup
@@ -32,15 +14,26 @@ This center point serves as a reference origin for all map-related services.
 
 I placed strong emphasis on implementing all major services and functionalities required for the assignment, ensuring a complete feature set with full responsiveness for end users.
 
+### Map Center
+
+For testing purposes, I placed mock locations around Fort Wayne - USA Florida town. Zoom is placed on towns center, and directions are starting from it.
+
+## Directions API
+
+While calculating directions, previously mentioned town is a starting point direction calculations (A), while targeted locations are marked as (B).
+
+I could make this dynamic, to really pickup lat, lng based on browsers location, but in that case for demo purpose sometimes direction will not work.
+
+The usual error would be NO_DIRECTIONS, returned from Google because directions may not be loaded across big distances (limited by oceans etc..).
+
 ---
 
 ## Setup
 
 To set up the project:
 
-1. Pull the repository from my GitHub profile:  
-   👉 https://github.com/amrudinbalich/forsta-code-assesment  
-
+1. Pull the repository from my GitHub profile:
+  👉 [https://github.com/amrudinbalich/forsta-code-assesment](https://github.com/amrudinbalich/forsta-code-assesment)
 2. Provide a valid **Google Maps API key**.
 
 The API key is embedded directly in the URL while loading the **Google Maps API script**.
@@ -65,8 +58,9 @@ This file serves as single source of truth for the page, and it stores a total a
 
 The page contains mobile design.
 By the provided mockup, but also from my side I tried to create mobile friendly UI devided into 3 main sections:
-1. Navbar 
-2. Addresses/Map 
+
+1. Navbar
+2. Addresses/Map
 3. Interactive Buttons
 
 After you switch to a higher screens, you will find out that the layout switches to different mode - more classic one.
@@ -77,6 +71,7 @@ Desktop design shows addresses next to map.
 Those 2 are the major sections.
 
 ## HTML Skeleton
+
 While building a page, starting form initial skeleton I did several changes, from the first stages including HTML normalization process of placing the **HTML Comments** next to important page assets, to later on removing **page assets** that are not being used.
 
 ### Page Scripts
@@ -84,7 +79,8 @@ While building a page, starting form initial skeleton I did several changes, fro
 Main running power of page interactivity is based on **ES6+ JavaScript**. The code has gone restructuring at some point of time (followed by repo's **pull request** names) where each refactor step is being described in the commit comment.
 
 #### JS Code Architecture
-I placed a storng empasis on **OOP** design in the code, but also classic, more 'relaxed' function-like JS structure can be found (inspect ```scripts/page-scripts``` for ref).
+
+I placed a storng empasis on **OOP** design in the code, but also classic, more 'relaxed' function-like JS structure can be found (inspect `scripts/page-scripts` for ref).
 
 ##### Why classes?
 
