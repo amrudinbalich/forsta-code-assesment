@@ -24,9 +24,9 @@
 
     <body>
 
-        <div class="container mt-5">
+        <div class="container mt-md-5 d-flex flex-column vh-100">
 
-            <header class="container-fluid border-bottom mb-4">
+            <header class="container-fluid border-bottom mb-md-4">
                 <div class="container">
                     <nav class="navbar navbar-expand-md navbar-light py-3">
             
@@ -81,15 +81,30 @@
             </header>
 
             <!-- N of around locations -->
-            <div class="row">
+            <div class="row d-none d-md-block">
                 <h3 id="locations-around" class="text-secondary-emphasis">Locations Around You</h3>
             </div>
 
             <!-- Map and Addresses Layout -->
-            <main class="row">
-                <div id="addresses" class="col-md-5 d-md-pe-3 border border-secondary"></div>
-                <div id="map" class="col-md-7"></div>
+            <main class="row flex-grow-1 overflow-hidden" style="min-height:0;">
+                <div id="addresses" class="col-md-6 d-md-pe-3 border border-secondary d-md-block h-100 overflow-auto">
+                    <!-- Address list -->
+                </div>
+
+                <div id="map" class="col-md-6 d-none d-md-block h-100">
+                    <!-- Map -->
+                </div>
             </main>
+
+            <!-- Toggle buttons - only visible on mobile -->
+            <div class="d-flex d-md-none my-3">
+                <button id="showAddresses" class="btn btn-dark flex-fill me-2">
+                    Addresses
+                </button>
+                <button id="showMap" class="btn btn-outline-dark flex-fill">
+                    Locations
+                </button>
+            </div>
 
         </div>
 
@@ -97,12 +112,17 @@
         <script type="text/javascript" src="scripts/services/route-service.js"></script>
         <script type="text/javascript" src="scripts/services/addresses-service.js"></script>
         <script type="text/javascript" src="scripts/services/map-service.js"></script>
+        <script type="text/javascript" src="scripts/page-script.js"></script>
 
         <script>
+            window.mapService = null;
+
             // initialize the application
             async function initApplication() {
-                const map = new MapService();
-                await map.initialize();
+                window.mapService = new MapService();
+                await window.mapService.initialize();
+
+                registerPageScript(); // register page button scripts
             }
         </script>
 

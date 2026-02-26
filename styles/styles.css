@@ -1,9 +1,26 @@
 /* CUSTOM STYLES HERE */
-#map, #addresses {
-    height: 600px;
+
+/* default (mobile) */
+#map,
+#addresses {
+    height: auto;
+    overflow-y: scroll;
 }
 
-#addresses {
-    overflow-x: hidden;
-    overflow-y: scroll;
+/* md and bigger */
+@media (min-width: 768px) {
+    #map,
+    #addresses {
+        max-height: 600px;
+    }
+}
+
+.active-link {
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.active-link:hover {
+    color: #ffc107;
+    text-decoration: underline;
 }

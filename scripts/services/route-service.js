@@ -15,7 +15,7 @@ class RouteService {
      */
     constructor(directionsService, directionsRenderer) {
         this.directionsService = directionsService;
-        this.directionsRenderer = directionsRenderer
+        this.directionsRenderer = directionsRenderer;
     }
 
     /**
