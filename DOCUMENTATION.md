@@ -28,6 +28,14 @@ The usual error would be NO_DIRECTIONS, returned from Google because directions 
 
 ---
 
+## Branching
+
+**main** branch represents final version of the code.
+
+While developing, I made forsta-dev branch and all feature level branches are prefixed with 'FORSTA', followed by the number of PR.
+
+Every PR contains list of commits, related to a feature that is developed.
+
 ## Setup
 
 To set up the project:
